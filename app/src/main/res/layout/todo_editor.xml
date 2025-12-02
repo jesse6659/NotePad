@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 标题 -->
+        <EditText
+            android:id="@+id/todo_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="待办事项标题"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <!-- 待办状态 -->
+        <CheckBox
+            android:id="@+id/todo_completed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="已完成"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp" />
+
+        <!-- 优先级 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="优先级"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <RadioGroup
+            android:id="@+id/priority_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/priority_low"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="低" />
+
+            <RadioButton
+                android:id="@+id/priority_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="中"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/priority_high"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="高" />
+        </RadioGroup>
+
+        <!-- 截止日期 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="截止日期"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/due_date_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择截止日期" />
+
+        <TextView
+            android:id="@+id/due_date_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="未设置"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- 详细描述 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="详细描述"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/todo_description"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="top"
+            android:hint="输入待办事项的详细描述..."
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+</ScrollView>

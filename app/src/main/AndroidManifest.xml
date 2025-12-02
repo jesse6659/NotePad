@@ -31,6 +31,10 @@
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
 
+        <activity android:name=".CategoryManager"
+            android:label="分类管理"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:exported="false" />
         <activity android:name="NotesList" android:label="@string/title_notes_list">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,6 +54,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".TodoEditor"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation">
+
+            <intent-filter android:label="编辑待办">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.google.note" />
+            </intent-filter>
+
+        </activity>
         <activity android:name="NoteEditor"
             android:theme="@android:style/Theme.Holo.Light"
             android:screenOrientation="sensor"

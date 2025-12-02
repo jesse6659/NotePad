@@ -39,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * This Activity handles "editing" a note, where editing is responding to
@@ -132,6 +133,7 @@ public class NoteEditor extends Activity {
             super.onDraw(canvas);
         }
     }
+    private long currentCategoryId = 1; // 默认分类
 
     /**
      * This method is called by Android when the Activity is first started. From the incoming
@@ -139,6 +141,7 @@ public class NoteEditor extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         /*
@@ -237,6 +240,12 @@ public class NoteEditor extends Activity {
         if (savedInstanceState != null) {
             mOriginalContent = savedInstanceState.getString(ORIGINAL_CONTENT);
         }
+        if (mState == STATE_EDIT && mCursor != null && mCursor.moveToFirst()) {
+            int colCategoryIndex = mCursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_CATEGORY_ID);
+            if (colCategoryIndex != -1) {
+                currentCategoryId = mCursor.getLong(colCategoryIndex);
+            }
+        }
     }
 
     /**
@@ -265,6 +274,15 @@ public class NoteEditor extends Activity {
              * record.
              */
             mCursor.moveToFirst();
+            if (mState == STATE_INSERT) {
+                // 对于新建笔记，使用默认分类或从Intent获取的分类
+                currentCategoryId = 1; // 默认值
+            } else if (mState == STATE_EDIT && mCursor != null && mCursor.moveToFirst()) {
+                int colCategoryIndex = mCursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_CATEGORY_ID);
+                if (colCategoryIndex != -1) {
+                    currentCategoryId = mCursor.getLong(colCategoryIndex);
+                }
+            }
 
             // Modifies the window title for the Activity according to the current Activity state.
             if (mState == STATE_EDIT) {
@@ -404,6 +422,9 @@ public class NoteEditor extends Activity {
             menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
                     new ComponentName(this, NoteEditor.class), null, intent, 0, null);
         }
+        menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "更改分类")
+                .setIcon(android.R.drawable.ic_menu_sort_by_size)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -445,7 +466,24 @@ public class NoteEditor extends Activity {
         } else if (id == R.id.menu_revert) {
             cancelNote();
         }
+        if (item.getTitle().toString().equals("更改分类")) {
+            showCategoryDialog();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+    private void showCategoryDialog() {
+        CategorySelectDialog dialog = new CategorySelectDialog(this,
+                new CategorySelectDialog.OnCategorySelectedListener() {
+                    @Override
+                    public void onCategorySelected(long categoryId, String categoryName) {
+                        currentCategoryId = categoryId;
+                        Toast.makeText(NoteEditor.this,
+                                "已切换到分类: " + categoryName, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        dialog.setSelectedCategory(currentCategoryId);
+        dialog.show();
     }
 
 //BEGIN_INCLUDE(paste)
@@ -525,6 +563,7 @@ public class NoteEditor extends Activity {
         // Sets up a map to contain values to be updated in the provider.
         ContentValues values = new ContentValues();
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, System.currentTimeMillis());
+        values.put(NotePad.Notes.COLUMN_NAME_CATEGORY_ID, currentCategoryId); // 设置分类
 
         // If the action is to insert a new note, this creates an initial title for it.
         if (mState == STATE_INSERT) {
